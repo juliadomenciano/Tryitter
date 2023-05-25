@@ -20,7 +20,7 @@ public class TryitterContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-      optionsBuilder.UseSqlServer(@"Server=127.0.0.1;Database=tryitter_db;User=sa;Password=password123;");
+      optionsBuilder.UseSqlServer(@"Server=127.0.0.1;Database=tryitter_db;User=SA;Password=Password12!;");
     }
 
 }
