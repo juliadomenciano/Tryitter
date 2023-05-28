@@ -7,10 +7,10 @@ namespace tryitter.Controllers
 {
   [ApiController]
   [Route("[controller]")]
-  public class StudentController : Controller
+  public class ModuleController : Controller
   {
-    private readonly StudentRepository _repository;
-    public StudentController(StudentRepository repository)
+    private readonly ModuleRepository _repository;
+    public ModuleController(ModuleRepository repository)
     {
       _repository = repository;
     }
@@ -19,15 +19,15 @@ namespace tryitter.Controllers
     [AllowAnonymous]
     public IActionResult Get()
     {
-      var getAllStudents = _repository.GetStudents();
-      return Ok(getAllStudents);
+      var getAllModules = _repository.GetModules();
+      return Ok(getAllModules);
     }
 
     [HttpPost]
     [AllowAnonymous]
-    public IActionResult PostAppointment(Student student)
+    public IActionResult PostAppointment(Module module)
     {
-      _repository.AddStudent(student);
+      _repository.AddModule(module);
       return Ok();
     }
   }

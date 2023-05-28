@@ -4,18 +4,18 @@ namespace tryitter.Repository
 {
   public class StudentRepository
   {
-    private readonly TryitterContext _context;
+    protected readonly TryitterContext _context;
     public StudentRepository (TryitterContext context)
     {
       _context = context;
     }
     public Student GetStudentById(int id)
     {
-      return _context.Students.Find(id);
+      return _context.Students.Where(s => s.StudentId == id).First();
     }
     public IEnumerable<Student> GetStudents()
     {
-      return _context.Students;
+      return _context.Students.ToList();
     }
     public Student AddStudent(Student Student)
     {

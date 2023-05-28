@@ -3,10 +3,14 @@ using System.Text;
 using tryitter.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using tryitter.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<TryitterContext>();
+builder.Services.AddScoped<StudentRepository>();
+builder.Services.AddScoped<ModuleRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAuthentication(options =>
@@ -28,8 +32,9 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization(options => {
-    options.AddPolicy("NewPromoCurrency", policy => policy.RequireClaim(ClaimTypes.UserData, new string[] {"Back-end", "Ciência da Computação"}));
+    options.AddPolicy("specialPolicy", policy => policy.RequireClaim(ClaimTypes.UserData, new string[] {"Back-end", "Ciência da Computação"}));
 });
+
 
 var app = builder.Build();
 
@@ -46,3 +51,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

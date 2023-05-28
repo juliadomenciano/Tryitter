@@ -29,10 +29,10 @@ namespace tryitter.Services
     private ClaimsIdentity AddClaims(Student student)
     {
       var claim = new ClaimsIdentity();
-      var name = new Claim(ClaimTypes.UserData, student.Module.ToString());
+      var module = new Claim(ClaimTypes.UserData, student.Module.ToString());
 
       var claimsCollection = new List<Claim>();
-      claimsCollection.Add(name);
+      claimsCollection.Add(module);
       claim.AddClaims(claimsCollection);
       return claim;
     }
