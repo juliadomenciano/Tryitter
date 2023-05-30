@@ -36,5 +36,10 @@ namespace tryitter.Repository
       _context.SaveChanges();
       return student;
     }
+    public Student GetStudentByName(string name)
+    {
+      var student = _context.Students.Where(s => s.Name.Contains(name)).First();
+      return student;
+    }
   }
 }
