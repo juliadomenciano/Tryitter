@@ -9,6 +9,11 @@ namespace tryitter.Repository
     {
       _context = context;
     }
+
+    public Student Login(string email, string password)
+    {
+      return _context.Students.Where(s => s.Email == email && s.Password == password).First();
+    }
     public Student GetStudentById(int id)
     {
       return _context.Students.Where(s => s.StudentId == id).First();
@@ -23,11 +28,15 @@ namespace tryitter.Repository
       _context.SaveChanges();
       return Student;
     }
-    public Student UpdateStudent(Student Student)
+    public Student UpdateStudent(Student student, Student studentNewInfo)
     {
-      _context.Students.Update(Student);
+      student.Name = studentNewInfo.Name;
+      student.Email = studentNewInfo.Email;
+      student.Password = studentNewInfo.Password;
+      student.Status = studentNewInfo.Status;
+      student.ModuleId = studentNewInfo.ModuleId;
       _context.SaveChanges();
-      return Student;
+      return student;
     }
     public Student DeleteStudent(int id)
     {

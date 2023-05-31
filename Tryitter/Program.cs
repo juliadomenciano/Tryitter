@@ -32,7 +32,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization(options => {
-    options.AddPolicy("specialPolicy", policy => policy.RequireClaim(ClaimTypes.UserData, new string[] {"Back-end", "Ciência da Computação"}));
+    options.AddPolicy("specialPolicy", policy => policy.RequireClaim(ClaimTypes.UserData, new string[] {"2", "3"}));
 });
 
 

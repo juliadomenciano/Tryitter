@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using tryitter.Repository;
 using tryitter.Models;
+using tryitter.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace tryitter.Controllers
 {
@@ -15,12 +18,19 @@ namespace tryitter.Controllers
       _repository = repository;
     }
 
-    [HttpGet]
-    [AllowAnonymous]
-    public IActionResult Login()
+    [HttpPost]
+    [Route("/Login")]
+    public IActionResult Login([FromBody]Login model)
     {
-      var getAllStudents = _repository.GetStudents();
-      return Ok(getAllStudents);
+      var student = _repository.Login(model.Email, model.Password);
+
+      if (student == null)
+      {
+        return Unauthorized();
+      }
+
+      string token = new TokenGenerator().Generate(student);
+      return Ok(token);
     }
 
     [HttpGet]
@@ -39,7 +49,7 @@ namespace tryitter.Controllers
       return Ok();
     }
 
-    [HttpGet("/{name}")]
+    [HttpGet("/student/{name}")]
     [AllowAnonymous]
     public IActionResult GetStudentByName(string name)
     {
@@ -52,9 +62,9 @@ namespace tryitter.Controllers
       return Ok(matchingStudents);
     }
 
-    [HttpPut("/{id}")]
-    [AllowAnonymous]
-    public IActionResult UpdateStudent(int id)
+    [HttpPut("/student/{id}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public IActionResult UpdateStudent(int id, Student studentInfo)
     {
       var getStudent = _repository.GetStudentById(id);
       if (getStudent == null)
@@ -62,12 +72,12 @@ namespace tryitter.Controllers
             return BadRequest("Student not found!");
         }
 
-      _repository.UpdateStudent(getStudent);
-      return Ok();
+      var updatedStudent = _repository.UpdateStudent(getStudent, studentInfo);
+      return Ok(updatedStudent);
     }
     
-    [HttpDelete("/{id}")]
-    [AllowAnonymous]
+    [HttpDelete("/student/{id}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public IActionResult DeleteStudent(int id)
     {
       var getStudent = _repository.GetStudentById(id);
