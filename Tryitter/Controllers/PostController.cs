@@ -5,6 +5,7 @@ using tryitter.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Claims;
 
 namespace tryitter.Controllers
 {
@@ -18,82 +19,84 @@ namespace tryitter.Controllers
       _repository = repository;
     }
 
-    [HttpGet]
-    [AllowAnonymous]
+    [HttpGet("/myPosts")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public IActionResult GetMyPosts()
     {
-      // var getAllPosts = _repository.GetPosts();
-      // return Ok(getAllPosts);
+      var studentIdClaim = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier);
+      int studentId = int.Parse(studentIdClaim.Value);
+      var getAllPosts = _repository.GetStudentPosts(studentId);
+      return Ok(getAllPosts);
     }
 
-    [HttpGet]
-    [AllowAnonymous]
+    [HttpGet("/myLastPost")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public IActionResult GetMyLastPost()
     {
-      // var getAllPosts = _repository.GetPosts();
-      // return Ok(getAllPosts);
+      var studentIdClaim = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier);
+      int studentId = int.Parse(studentIdClaim.Value);
+      var getAllPosts = _repository.GetStudentLastPost(studentId);
+      return Ok(getAllPosts);
     }
 
-    [HttpGet("/Post/{name}")]
+    [HttpGet("/Post/{id}")]
     [AllowAnonymous]
-    public IActionResult GetPostByStudentName(string name)
+    public IActionResult GetPostByStudentId(int id)
     {
-      // if (string.IsNullOrEmpty(name))
-      //   {
-      //       return GetPosts();
-      //   }
-
-      // var matchingPosts = _repository.GetPostByName(name);
-      // return Ok(matchingPosts);
+      var getAllPosts = _repository.GetPostByStudentId(id);
+      return Ok(getAllPosts);
     }
 
-    [HttpGet("/Post/{name}")]
+    [HttpGet("/lastPost/{id}")]
     [AllowAnonymous]
-    public IActionResult GetLastPostByStudentName(string name)
+    public IActionResult GetLastPostByStudentId(int id)
     {
-      // if (string.IsNullOrEmpty(name))
-      //   {
-      //       return GetPosts();
-      //   }
-
-      // var matchingPosts = _repository.GetPostByName(name);
-      // return Ok(matchingPosts);
+      var getLastPost = _repository.GetLastPostByStudentId(id);
+      return Ok(getLastPost);
     }
 
     [HttpPost]
-    [AllowAnonymous]
+    // [AllowAnonymous]
     public IActionResult CreatePost(Post Post)
     {
-      // _repository.AddPost(Post);
-      // return Ok();
+      var newPost = _repository.AddPost(Post);
+      return Ok(newPost);
     }
 
     [HttpPut("/Post/{id}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public IActionResult UpdatePost(int id, Post PostInfo)
     {
-      // var getPost = _repository.GetPostById(id);
-      // if (getPost == null)
-      //   {
-      //       return BadRequest("Post not found!");
-      //   }
+      var getPost = _repository.GetPostById(id);
+      if (getPost == null)
+        {
+            return BadRequest("Post not found!");
+        }
 
-      // var updatedPost = _repository.UpdatePost(getPost, PostInfo);
-      // return Ok(updatedPost);
+      var updatedPost = _repository.UpdatePost(getPost, PostInfo);
+      return Ok(updatedPost);
     }
     
     [HttpDelete("/Post/{id}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public IActionResult DeletePost(int id)
     {
-      // var getPost = _repository.GetPostById(id);
-      // if (getPost == null)
-      //   {
-      //       return BadRequest("Post not found!");
-      //   }
+      var getPost = _repository.GetPostById(id);
+      if (getPost == null)
+        {
+            return BadRequest("Post not found!");
+        }
 
-      // _repository.DeletePost(id);
-      // return Ok();
+      _repository.DeletePost(id);
+      return Ok();
+    }
+
+    [HttpGet]
+    // [AllowAnonymous]
+    public IActionResult GetAllPosts()
+    {
+      var posts = _repository.GetAllPosts();
+      return Ok(posts);
     }
   }
 }
