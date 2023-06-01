@@ -10,13 +10,32 @@ namespace tryitter.Repository
       _context = context;
     }
 
-    public Post GetPostById(int id)
-    {
-      return _context.Posts.Where(s => s.PostId == id).First();
-    }
-    public IEnumerable<Post> GetPosts()
+    public IEnumerable<Post> GetAllPosts()
     {
       return _context.Posts.ToList();
+    }
+
+    public Post GetPostById(int id)
+    {
+      return _context.Posts.Where(p => p.PostId == id).First();
+    }
+
+    public IEnumerable<Post> GetStudentPosts(int id)
+    {
+      return _context.Posts.Where(p => p.StudentId == id).ToList();
+    }
+    public Post GetStudentLastPost(int id)
+    {
+      return _context.Posts.OrderBy(p => p.PostId).LastOrDefault(p => p.StudentId == id);
+    }
+    public IEnumerable<Post> GetPostByStudentId(int id)
+    {
+      var posts = _context.Posts.Where(p => p.StudentId == id).ToList();
+      return posts;
+    }
+    public Post GetLastPostByStudentId(int id)
+    {
+      return _context.Posts.Where(p => p.StudentId == id).OrderBy(p => p.PostId).LastOrDefault();
     }
     public Post AddPost(Post Post)
     {
@@ -26,11 +45,10 @@ namespace tryitter.Repository
     }
     public Post UpdatePost(Post Post, Post PostNewInfo)
     {
-      // Post.Name = PostNewInfo.Name;
-      // Post.Email = PostNewInfo.Email;
-      // Post.Password = PostNewInfo.Password;
-      // Post.Status = PostNewInfo.Status;
-      // Post.ModuleId = PostNewInfo.ModuleId;
+      Post.Title = PostNewInfo.Title;
+      Post.Text = PostNewInfo.Text;
+      Post.UpdatedAt = DateTime.Now;
+
       _context.SaveChanges();
       return Post;
     }
@@ -39,11 +57,6 @@ namespace tryitter.Repository
       var Post = _context.Posts.Find(id);
       _context.Posts.Remove(Post);
       _context.SaveChanges();
-      return Post;
-    }
-    public Post GetPostByName(string name)
-    {
-      var Post = _context.Posts.Where(s => s.Name.Contains(name)).First();
       return Post;
     }
   }

@@ -56,7 +56,7 @@ namespace tryitter.Controllers
     }
 
     [HttpPost]
-    // [AllowAnonymous]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public IActionResult CreatePost(Post Post)
     {
       var newPost = _repository.AddPost(Post);
@@ -92,7 +92,7 @@ namespace tryitter.Controllers
     }
 
     [HttpGet]
-    // [AllowAnonymous]
+    [AllowAnonymous]
     public IActionResult GetAllPosts()
     {
       var posts = _repository.GetAllPosts();
