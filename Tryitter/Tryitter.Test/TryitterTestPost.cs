@@ -103,7 +103,7 @@ namespace tryitter.Models.Tests
                 Module = new Module(),
                 Posts = new List<Post>()
             };
-            
+          
             // Arrange
             var post = new Post
             {
