@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using FluentAssertions;
 using Xunit;
-// ok
+
 namespace tryitter.Models.Tests
 {
     public class TryitterTestPost
@@ -103,7 +103,7 @@ namespace tryitter.Models.Tests
                 Module = new Module(),
                 Posts = new List<Post>()
             };
-
+          
             // Arrange
             var post = new Post
             {
