@@ -1,5 +1,5 @@
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Tryitter.Test
 {
