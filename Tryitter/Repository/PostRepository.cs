@@ -10,54 +10,123 @@ namespace tryitter.Repository
       _context = context;
     }
 
-    public IEnumerable<Post> GetAllPosts()
+    public IEnumerable<PostResponse> GetAllPosts()
     {
-      return _context.Posts.ToList();
+      var posts = _context.Posts.ToList();
+      var response = new List<PostResponse>();
+      foreach (Post post in posts)
+        {
+          response.Add(new PostResponse
+            {
+                PostId = post.PostId,
+                Title = post.Title,
+                Text = post.Text,
+                CreatedAt = post.CreatedAt,
+                UpdatedAt = post.UpdatedAt,
+                StudentId = post.StudentId
+            });
+        }
+      return response;
     }
 
-    public Post GetPostById(int id)
+    public PostResponse GetPostById(int id)
     {
-      return _context.Posts.Where(p => p.PostId == id).First();
+      var post = _context.Posts.Where(p => p.PostId == id).First();
+      return new PostResponse
+      {
+        PostId = post.PostId,
+        Title = post.Title,
+        Text = post.Text,
+        CreatedAt = post.CreatedAt,
+        UpdatedAt = post.UpdatedAt,
+        StudentId = post.StudentId
+      };
     }
 
-    public IEnumerable<Post> GetStudentPosts(int id)
-    {
-      return _context.Posts.Where(p => p.StudentId == id).ToList();
-    }
-    public Post GetStudentLastPost(int id)
-    {
-      return _context.Posts.OrderBy(p => p.PostId).LastOrDefault(p => p.StudentId == id);
-    }
-    public IEnumerable<Post> GetPostByStudentId(int id)
+    public IEnumerable<PostResponse> GetStudentPosts(int id)
     {
       var posts = _context.Posts.Where(p => p.StudentId == id).ToList();
-      return posts;
+      var response = new List<PostResponse>();
+      foreach (Post post in posts)
+        {
+          response.Add(new PostResponse
+            {
+                PostId = post.PostId,
+                Title = post.Title,
+                Text = post.Text,
+                CreatedAt = post.CreatedAt,
+                UpdatedAt = post.UpdatedAt,
+                StudentId = post.StudentId
+            });
+        }
+      return response;
     }
-    public Post GetLastPostByStudentId(int id)
+    public PostResponse GetStudentLastPost(int id)
     {
-      return _context.Posts.Where(p => p.StudentId == id).OrderBy(p => p.PostId).LastOrDefault();
+      var post = _context.Posts.OrderBy(p => p.PostId).LastOrDefault(p => p.StudentId == id);
+      return new PostResponse
+      {
+        PostId = post.PostId,
+        Title = post.Title,
+        Text = post.Text,
+        CreatedAt = post.CreatedAt,
+        UpdatedAt = post.UpdatedAt,
+        StudentId = post.StudentId
+      };
     }
-    public Post AddPost(Post Post)
+    public IEnumerable<PostResponse> GetPostByStudentId(int id)
+    {
+      var posts = _context.Posts.Where(p => p.StudentId == id).ToList();
+      var response = new List<PostResponse>();
+      foreach (Post post in posts)
+        {
+          response.Add(new PostResponse
+            {
+                PostId = post.PostId,
+                Title = post.Title,
+                Text = post.Text,
+                CreatedAt = post.CreatedAt,
+                UpdatedAt = post.UpdatedAt,
+                StudentId = post.StudentId
+            });
+        }
+      return response;
+    }
+    public PostResponse GetLastPostByStudentId(int id)
+    {
+      var post = _context.Posts.Where(p => p.StudentId == id).OrderBy(p => p.PostId).LastOrDefault();
+      return new PostResponse
+      {
+        PostId = post.PostId,
+        Title = post.Title,
+        Text = post.Text,
+        CreatedAt = post.CreatedAt,
+        UpdatedAt = post.UpdatedAt,
+        StudentId = post.StudentId
+      };
+    }
+    public string AddPost(Post Post)
     {
       _context.Posts.Add(Post);
       _context.SaveChanges();
-      return Post;
+      return "Post Created";
     }
-    public Post UpdatePost(Post Post, Post PostNewInfo)
+    public string UpdatePost(int id, Post PostNewInfo)
     {
-      Post.Title = PostNewInfo.Title;
-      Post.Text = PostNewInfo.Text;
-      Post.UpdatedAt = DateTime.Now;
+      var post = _context.Posts.Where(p => p.PostId == id).First();
+      post.Title = PostNewInfo.Title;
+      post.Text = PostNewInfo.Text;
+      post.UpdatedAt = DateTime.Now;
 
       _context.SaveChanges();
-      return Post;
+      return "Post updated";
     }
-    public Post DeletePost(int id)
+    public string DeletePost(int id)
     {
       var Post = _context.Posts.Find(id);
       _context.Posts.Remove(Post);
       _context.SaveChanges();
-      return Post;
+      return "Post deleted";
     }
   }
 }

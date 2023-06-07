@@ -9,46 +9,72 @@ namespace tryitter.Repository
     {
       _context = context;
     }
-
     public Student Login(string email, string password)
     {
       return _context.Students.Where(s => s.Email == email && s.Password == password).First();
     }
-    public Student GetStudentById(int id)
+    public StudentResponse GetStudentById(int id)
     {
-      return _context.Students.Where(s => s.StudentId == id).First();
+      var student = _context.Students.Where(s => s.StudentId == id).First();
+      return new StudentResponse
+      {
+        StudentId = student.StudentId,
+        Name = student.Name,
+        Status = student.Status,
+        ModuleId = student.ModuleId
+      };
     }
-    public IEnumerable<Student> GetStudents()
+    public IEnumerable<StudentResponse> GetStudents()
     {
-      return _context.Students.ToList();
+      var students = _context.Students.ToList();
+      var response = new List<StudentResponse>();
+      foreach (Student student in students)
+            {
+                response.Add(new StudentResponse
+                {
+                    StudentId = student.StudentId,
+                    Name = student.Name,
+                    Status = student.Status,
+                    ModuleId = student.ModuleId
+                });
+            }
+      return response;
+
     }
-    public Student AddStudent(Student Student)
+    public string AddStudent(Student Student)
     {
       _context.Students.Add(Student);
       _context.SaveChanges();
-      return Student;
+      return "Student created";
     }
-    public Student UpdateStudent(Student student, Student studentNewInfo)
+    public string UpdateStudent(int id, Student studentNewInfo)
     {
+      var student = _context.Students.Where(s => s.StudentId == id).First();
       student.Name = studentNewInfo.Name;
       student.Email = studentNewInfo.Email;
       student.Password = studentNewInfo.Password;
       student.Status = studentNewInfo.Status;
       student.ModuleId = studentNewInfo.ModuleId;
       _context.SaveChanges();
-      return student;
+      return "Student updated";
     }
-    public Student DeleteStudent(int id)
+    public string DeleteStudent(int id)
     {
       var student = _context.Students.Find(id);
       _context.Students.Remove(student);
       _context.SaveChanges();
-      return student;
+      return "Student deleted";
     }
-    public Student GetStudentByName(string name)
+    public StudentResponse GetStudentByName(string name)
     {
       var student = _context.Students.Where(s => s.Name.Contains(name)).First();
-      return student;
+      return new StudentResponse
+      {
+        StudentId = student.StudentId,
+        Name = student.Name,
+        Status = student.Status,
+        ModuleId = student.ModuleId
+      };
     }
   }
 }

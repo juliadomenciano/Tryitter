@@ -45,8 +45,8 @@ namespace tryitter.Controllers
     [AllowAnonymous]
     public IActionResult CreateStudent(Student student)
     {
-      _repository.AddStudent(student);
-      return Ok();
+      var result = _repository.AddStudent(student);
+      return Ok(result);
     }
 
     [HttpGet("/student/{name}")]
@@ -72,7 +72,7 @@ namespace tryitter.Controllers
             return BadRequest("Student not found!");
         }
 
-      var updatedStudent = _repository.UpdateStudent(getStudent, studentInfo);
+      var updatedStudent = _repository.UpdateStudent(id, studentInfo);
       return Ok(updatedStudent);
     }
     
@@ -86,8 +86,8 @@ namespace tryitter.Controllers
             return BadRequest("Student not found!");
         }
 
-      _repository.DeleteStudent(id);
-      return Ok();
+      var result =_repository.DeleteStudent(id);
+      return Ok(result);
     }
   }
 }

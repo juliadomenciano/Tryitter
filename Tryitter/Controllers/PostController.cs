@@ -73,7 +73,7 @@ namespace tryitter.Controllers
             return BadRequest("Post not found!");
         }
 
-      var updatedPost = _repository.UpdatePost(getPost, PostInfo);
+      var updatedPost = _repository.UpdatePost(id, PostInfo);
       return Ok(updatedPost);
     }
     
@@ -87,8 +87,8 @@ namespace tryitter.Controllers
             return BadRequest("Post not found!");
         }
 
-      _repository.DeletePost(id);
-      return Ok();
+      var result = _repository.DeletePost(id);
+      return Ok(result);
     }
 
     [HttpGet]
